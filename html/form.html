@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>アンケート</title>
+        <style>
+            body {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 10%;
+            }
+
+            .h2 {
+                text-align: center;
+            }
+
+            h2 {
+                color: #F79428;
+                font-size: 32px;
+            }
+
+            .formitem {
+                display: flex;
+                align-items: baseline;
+                margin-bottom: 20px;
+            }
+
+            .formitem-title {
+                width: 25%;
+                display: flex;
+                align-items: center;
+            }
+
+            .formitem-title span {
+                background-color: red;
+                color: #fff;
+                padding: 3px 5px;
+                border-radius: 5px;
+                margin-left: 10px;
+            }
+
+            .text,
+            textarea {
+                width: 75%;
+            }
+
+            input[type=text] {
+                width: 100%;
+            }
+
+            .radiobox {
+                display: flex;
+            }
+
+            .btn {
+                text-align: center;
+                padding-top: 70px;
+            }
+
+            button {
+                background-color: #F79428;
+                color: #fff;
+                border: none;
+                padding: 10px 40px;
+                font-size: 20px;
+                border-radius: 10px;
+            }
+
+            .checkitem,
+            .radioitem {
+                margin-right: 20px;
+            }
+
+            .error {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="h2">
+            <h2>アンケート</h2>
+        </div>
+        <form action="/" method="post">
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>名前</p><span class="red">必須</span>
+                </div>
+                <div class="text">
+                    <input type="text" name="name" onchange="nameChange()">
+                    <p class="error errorname"></p>
+                </div>
+            </div>
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>かな</p><span class="red">必須</span>
+                </div>
+                <div class="text">
+                    <input type="text" name="kana_name" onchange="kananameChange()">
+                    <p class="error errorkananame"></p>
+                </div>
+            </div>
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>性別</p><span class="red">必須</span>
+                </div>
+                <div>
+                    <div class="radiobox" onclick="radioClick()">
+                        <div class="radioitem"><input type="radio" id="man" name="gender" value="男性">男性</div>
+                        <div class="radioitem"><input type="radio" id="woman" name="gender" value="女性">女性</div>
+                    
+                    </div>
+                    <p class="error errorgenger"></p>
+                </div>
+            </div>
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>email</p><span class="red">必須</span>
+                </div>
+                <div class="text">
+                    <input type="text" name="email" onchange="emailChange()">
+                    <p class="error erroremail"></p>
+                </div>
+            </div>
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>お住いの住所</p><span class="red">必須</span>
+                </div>
+                <div class="text">
+                    <input type="text" name="address" onchange="addressChange()">
+                    <p class="error erroraddress"></p>
+                </div>
+            </div>
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>電話番号</p><span class="red">必須</span>
+                </div>
+                <div class="text">
+                    <input type="text" name="phone" onchange="phoneChange()">
+                    <p class="error errorphone"></p>
+                </div>
+            </div>
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>当サイトを知った理由</p>
+                </div>
+                <div class="checkitem"><input type="checkbox" name="content[]" value="広告で知った">広告で知った </div>
+                <div class="checkitem"><input type="checkbox" name="content[]" value="サイトを見た">サイトを見た </div>
+                <div class="checkitem"><input type="checkbox" name="content[]" value="知人から教えてもらった">知人から教えてもらった </div>
+                <div class="checkitem"><input type="checkbox" name="content[]" value="youtubeの広告を見た">youtubeの広告を見た</div>
+            </div>
+            <div class="formitem">
+                <div class="formitem-title">
+                    <p>問い合わせ内容</p>
+                </div>
+                <textarea name="question" cols="30" rows="10"></textarea>
+            </div>
+            <div class="btn"><button id="button" type="button" onclick="submitClick()">送信</button></div>
+        </form>
+        <script>
+
+            //名前
+            function nameChange() {
+                let namebox = document.getElementsByName("name")[0].value
+                let errorname = document.getElementsByClassName("errorname")[0];
+
+                if (namebox.match(/[0-9０－９!-/:-@¥[-`{-~](?![0-9０－９!-/:-@¥[-`{-~])/g)) {
+                    errorname.innerHTML = "名前は漢字、ひらがな、英字で入力してください。"
+                } else {
+                    errorname.innerHTML = ""
+                }
+            }
+            //かな
+            function kananameChange() {
+                let kananamebox = document.getElementsByName("kana_name")[0].value
+                let errorkananame = document.getElementsByClassName("errorkananame")[0];
+
+                if (!kananamebox.match(/^[ぁ-んー]+$/)) {
+                    errorkananame.innerHTML = "かなはひらがなで入力してください。"
+                }
+                else {
+                    errorkananame.innerHTML = ""
+                }
+            }
+
+            //性別(どちらかが押されたらエラーを消す)
+            function radioClick() {
+                let man = document.getElementById("man").checked;
+                let woman = document.getElementById("woman").checked;
+
+                for (let i = 0; i < 2; i++) {
+                    let genderradios = document.querySelectorAll("input[name=gender]");
+                    let genderradio = genderradios[i];
+
+
+                    let errorgenger = document.getElementsByClassName("errorgenger")[0];
+                    if (man === true || woman === true) {
+                        errorgenger.innerHTML = ""
+                    }
+                }
+            }
+
+            //email
+            function emailChange() {
+                let emailbox = document.getElementsByName("email")[0].value
+                console.log(emailbox);
+                let erroremail = document.getElementsByClassName("erroremail")[0];
+                console.log(erroremail);
+
+                if (!emailbox.match(/^[a-zA-Z0-9_+-]+(.[a-zA-Z0-9_+-]+)*@([a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]*\.)+[a-zA-Z]{2,}$/)) {
+                    erroremail.innerHTML = "メールアドレスの形式が正しくありません。"
+                } else {
+                    erroremail.innerHTML = ""
+                }
+            }
+
+            //住所
+            function addressChange() {
+                let addressbox = document.getElementsByName("address")[0].value
+                console.log(addressbox);
+                let erroraddress = document.getElementsByClassName("erroraddress")[0];
+                console.log(erroraddress);
+
+                if (addressbox.match(/[a-zA-Z!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/)) {
+                    erroraddress.innerHTML = "住所は漢字、ひらがな、数字で入力してください。"
+                } else {
+                    erroraddress.innerHTML = ""
+                }
+            }
+
+            //電話番号
+            function phoneChange() {
+                let phonebox = document.getElementsByName("phone")[0].value
+                console.log(phonebox);
+                let errorphone = document.getElementsByClassName("errorphone")[0];
+                console.log(errorphone);
+
+                if (!phonebox.match(/^(0[5-9]0-?[0-9]{4}-?[0-9]{4}|0[0-9]{3}-?[0-9]{2}-?[0-9]{4})$/)) {
+                    errorphone.innerHTML = "電話番号の形式が正しくありません。"
+                } else {
+                    errorphone.innerHTML = ""
+                }
+            }
+
+            function submitClick() {
+                namebox = document.getElementsByName("name")[0].value
+                errorname = document.getElementsByClassName("errorname")[0];
+                if (namebox === "") {
+                    errorname.innerHTML = "名前を入力してください";
+                } else if (namebox !== "" && errorname.innerHTML === "") {
+                    errorname.innerHTML = "";
+                }
+
+                kananamebox = document.getElementsByName("kana_name")[0].value
+                errorkananame = document.getElementsByClassName("errorkananame")[0];
+                if (kananamebox === "") {
+                    errorkananame.innerHTML = "かなを入力してください";
+                } else if (kananamebox !== "" && errorkananame.innerHTML === "") {
+                    errorkananame.innerHTML = "";
+                }
+
+                man = document.getElementById("man").checked;
+                woman = document.getElementById("woman").checked;
+
+                for (let i = 0; i < 2; i++) {
+                    genderradios = document.querySelectorAll("input[name=gender]");
+                    genderradio = genderradios[i];
+
+
+                    errorgenger = document.getElementsByClassName("errorgenger")[0];
+                    if (man === false && woman === false) {
+                        errorgenger.innerHTML = "性別を選択してください。"
+                    }
+                }
+
+                emailbox = document.getElementsByName("email")[0].value
+                erroremail = document.getElementsByClassName("erroremail")[0];
+                if (emailbox === "") {
+                    erroremail.innerHTML = "emailを入力してください";
+                } else if (emailbox !== "" && erroremail.innerHTML === "") {
+                    erroremail.innerHTML = "";
+                }
+
+                addressbox = document.getElementsByName("address")[0].value
+                erroraddress = document.getElementsByClassName("erroraddress")[0];
+                if (addressbox === "") {
+                    erroraddress.innerHTML = "住所を入力してください";
+                } else if (addressbox !== "" && erroraddress.innerHTML === "") {
+                    erroraddress.innerHTML = "";
+                }
+
+                phonebox = document.getElementsByName("phone")[0].value
+                errorphone = document.getElementsByClassName("errorphone")[0];
+                if (phonebox === "") {
+                    errorphone.innerHTML = "電話番号を入力してください";
+                } else if (phonebox !== "" && errorphone.innerHTML === "") {
+                    errorphone.innerHTML = "";
+                }
+
+                let button = document.getElementById("button");
+                if(errorname.innerText !== "" || errorkananame.innerText !== "" || errorgenger.innerText !== "" || erroremail.innerText !== "" || erroraddress.innerText !== "" || errorphone.innerText !== "" ) {
+                    button.type = "button";
+                } else {
+                    button.type = "submit";
+                }
+
+
+
+            }
+        </script>
+    </body>
+</html>
